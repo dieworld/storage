@@ -3,37 +3,6 @@ import Vapor
 import Crypto
 import Foundation
 
-public enum Region: String {
-    case usEast1 = "us-east-1"
-    case usEast2 = "us-east-2"
-    case usWest1 = "us-west-1"
-    case usWest2 = "us-west-2"
-    case euWest1 = "eu-west-1"
-    case euCentral1 = "eu-central-1"
-    case apSouth1 = "ap-south-1"
-    case apSoutheast1 = "ap-southeast-1"
-    case apSoutheast2 = "ap-southeast-2"
-    case apNortheast1 = "ap-northeast-1"
-    case apNortheast2 = "ap-northeast-2"
-    case saEast1 = "sa-east-1"
-
-    public var host: String {
-        switch self {
-        case .usEast1: return "s3.amazonaws.com"
-        case .usEast2: return "s3.us-east-2.amazonaws.com"
-        case .usWest1: return "s3-us-west-1.amazonaws.com"
-        case .usWest2: return "s3-us-west-2.amazonaws.com"
-        case .euWest1: return "s3-eu-west-1.amazonaws.com"
-        case .euCentral1: return "s3.eu-central-1.amazonaws.com"
-        case .apSouth1: return "s3.ap-south-1.amazonaws.com"
-        case .apSoutheast1: return "s3-ap-southeast-1.amazonaws.com"
-        case .apSoutheast2: return "s3-ap-southeast-2.amazonaws.com"
-        case .apNortheast1: return "s3-ap-northeast-1.amazonaws.com"
-        case .apNortheast2: return "s3.ap-northeast-2.amazonaws.com"
-        case .saEast1: return "s3-sa-east-1.amazonaws.com"
-        }
-    }
-}
 
 public enum Payload {
     case bytes(Data)
@@ -116,13 +85,13 @@ public struct AWSSignatureV4 {
     public init(
         service: String,
         host: String,
-        region: Region,
+        region: String,
         accessKey: String,
         secretKey: String
     ) {
         self.service = service
         self.host = host
-        self.region = region.rawValue
+        self.region = region
         self.accessKey = accessKey
         self.secretKey = secretKey
     }
@@ -312,7 +281,7 @@ public struct S3: Service {
         host: String,
         accessKey: String,
         secretKey: String,
-        region: Region
+        region: String
     ) {
         self.host = host
         signer = AWSSignatureV4(
